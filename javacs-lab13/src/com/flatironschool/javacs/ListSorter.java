@@ -64,7 +64,50 @@ public class ListSorter<T> {
 	 */
 	public List<T> mergeSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+        int size = list.size();
+
+        if(size<=1)
+        {
+        	return list;
+        }
+        List<T> first = new LinkedList<T>(list.subList(0,size/2));
+        List<T> second = new LinkedList<T>(list.subList(size/2,size));
+        first=mergeSort(first,comparator);
+        second=mergeSort(second,comparator);
+        return mergeSortHelper(first,second,comparator);
+	}
+
+	public List<T> mergeSortHelper(List<T> list1, List<T> list2 ,Comparator<T> comparator)
+	{	
+		List<T> mergedList = new LinkedList<T>();
+		int index1=0,index2=0;
+		while(index1<list1.size()||index2<list2.size())
+		{
+			if(index2==list2.size())
+			{
+				mergedList.add(list1.get(index1));
+				index1++;
+			}
+			else if(index1==list1.size())
+			{
+				mergedList.add(list2.get(index2));
+				index2++;	
+			}
+			else{
+				if(comparator.compare(list1.get(index1),list2.get(index2))<0)
+				{
+					//System.out.println(list2.get(index2)+" -------< "+list1.get(index1));
+					mergedList.add(list1.get(index1));
+					index1++;
+					
+				}
+				else{
+					mergedList.add(list2.get(index2));
+					index2++;
+				}
+			}
+		}
+		return mergedList;
 	}
 
 	/**
@@ -76,6 +119,13 @@ public class ListSorter<T> {
 	 */
 	public void heapSort(List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
+        PriorityQueue<T> heap = new PriorityQueue<T>(list.size(),comparator);
+        heap.addAll(list);
+        list.clear();
+        while(!heap.isEmpty())
+        {
+        	list.add(heap.poll());
+        }
 	}
 
 	
@@ -90,7 +140,27 @@ public class ListSorter<T> {
 	 */
 	public List<T> topK(int k, List<T> list, Comparator<T> comparator) {
         // FILL THIS IN!
-        return null;
+        PriorityQueue<T> heap = new PriorityQueue<T>();
+        for(T temp: list)
+        {
+        	if(heap.size()<k)
+        	{
+        		heap.offer(temp);
+        	}
+        	else{
+        		if(comparator.compare(temp,heap.peek())>0)
+        		{
+        			heap.poll();
+        			heap.offer(temp);
+        		}
+        	}
+        }
+        list.clear();
+        while(!heap.isEmpty())
+        {
+        	list.add(heap.poll());
+        }
+        return list;
 	}
 
 	
